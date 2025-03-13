@@ -116,8 +116,42 @@ def system_observe_1(OAF,MB):
 
 # Hard Fault Test #2 - Heating Coil
 
+def system_observe_2(coil,deltaT):
+    print("""Compares deltaT (SAT-RAT) to expected values based on HC/CC settings, 
+    and raise error if delta_T is lower than expected""")
+
 
 #### TEST 2 Implementation ####
+deltaT = []
+coil = []
+system_push_AO(0, 0, 0) # start test, set all actuators to 0
+system_push_MB(0)
+wait(600) # MAT = RAT
+deltaT.append(SAT - RAT) # expected to be 0
+
+heatingSeason = True # based on AHU seasonal operation settings
+coolingSeason = False # based on AHU seasonal operation settings
+
+if heatingSeason:
+    system_push_AO(50, 0, 0) # set HC to 50
+    wait(300)
+    deltaT.append(SAT - RAT)
+
+    system_push_AO(100, 0, 0) # set HC to 100
+    wait(300)
+    deltaT.append(SAT - RAT)
+
+elif coolingSeason:
+    system_push_AO(0, 50, 0) # set HC to 50
+    wait(300)
+    deltaT.append(SAT - RAT)
+
+    system_push_AO(0, 50, 0) # set HC to 100
+    wait(300)
+    deltaT.append(SAT - RAT)
+system_observe_2(deltaT)
+
+
 
 # Hard Fault Test #3 - Cooling Coil
 
